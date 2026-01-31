@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 plt.rcParams['text.usetex'] = True
 plt.rcParams['font.family'] = 'serif'
+plt.rcParams["figure.dpi"] = 300
 import numpy as np
 import scipy as sp
 import os
@@ -461,7 +462,7 @@ Rlinlog = 'lin'
 
 Rmin = _get_float(f"Minimum horizon radius? (press return for default value Rmin = {Rmin}): ", Rmin)
 Rmax = _get_float(f"Maximum horizon radius? (press return for default value Rmax = {Rmax}): ", Rmax)
-Rnum = _get_float(f"Numer of R values? (press return for default value Rnum = {Rnum}): ", Rnum)
+Rnum = _get_int(f"Numer of R values? (press return for default value Rnum = {Rnum}): ", Rnum)
 Rlinglog = _get_str(f"R value lin/log spacing? (press return for default = {Rlinlog}): ", Rlinlog)
 
 # time to make plots
