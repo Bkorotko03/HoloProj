@@ -13,7 +13,12 @@ import json
 import warnings
 
 # time for housekeeping and filepath setup
-fpath = f'./{datetime.date.today()}_out'
+date = datetime.date.today()
+now = datetime.datetime.now()
+fdate = date.strftime('%y%m%d')
+fnow = now.strftime('%y%m%d_%H%M%S')
+
+fpath = f'./{fdate}_out'
 os.makedirs(fpath,exist_ok=True)
 
 print('Mutual information calculation for shocked Reissner-Nordstrom AdS black hole.')
@@ -488,7 +493,7 @@ bigdict = {
     'Rlinlog': Rlinlog,
 }
 
-with open(f"{fpath}/{datetime.datetime.now()}_data.json", "w") as json_file:
+with open(f"{fpath}/{fnow}_data.json", "w") as json_file:
     json.dump(bigdict, json_file, indent=4)
 
 print(f'All plots and input params saved to {fpath} \ngoodbye :3')
