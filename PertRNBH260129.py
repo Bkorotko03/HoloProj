@@ -86,7 +86,7 @@ def _get_bool(prompt, default=True):
         print("Input y or n.")
         sys.exit()
 
-suppress_warnings = _get_bool("Suppress runtime warnings? [y/n] (default y): ", default=True)
+suppress_warnings = _get_bool("Suppress runtime warnings? [y/n] (press return for default y): ", default=True)
 if suppress_warnings:
     warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -454,7 +454,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,Rtyp='lin',almin=1,almax=1000): #change bounds o
     plt.legend()
     plt.semilogx()
     plt.ylim((0,maxval))
-    plt.xlim((xmin,xmax))
+    plt.xlim((xmin,xmax)) # this xmax value can sometimes get a little large to resolve fine detail at low alpha, can manually set to fix
     # plt.semilogy()
     plt.savefig(f'{fpath}/Lcritvsalpha.png')
     plt.close()
