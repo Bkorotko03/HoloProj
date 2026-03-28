@@ -1,8 +1,15 @@
 # More plots and debug cells located in PertRNBH260128.ipynb
 
 import matplotlib.pyplot as plt
+plt.rcParams['xtick.top'] = True
+plt.rcParams['ytick.right'] = True
+plt.rcParams['xtick.direction'] = 'in'
+plt.rcParams['ytick.direction'] = 'in'
+plt.rcParams['xtick.minor.visible'] = True
+plt.rcParams['ytick.minor.visible'] = True
 plt.rcParams['text.usetex'] = True
 plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = 'Times New Roman'
 plt.rcParams["figure.dpi"] = 300
 import numpy as np
 import scipy as sp
@@ -21,7 +28,7 @@ fnow = now.strftime('%y%m%d_%H%M%S')
 fpath = f'./{fdate}_out'
 os.makedirs(fpath,exist_ok=True)
 
-print('Mutual information calculation for shocked Reissner-Nordstrom AdS black hole.')
+print('Entropy calculations for shocked Reissner-Nordstrom AdS black hole.')
 
 # lets  set some basic params here
 rmax = 1000000000
