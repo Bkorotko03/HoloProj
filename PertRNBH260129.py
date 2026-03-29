@@ -504,4 +504,4 @@ with open(f"{fpath}/{fnow}_data.json", "w") as json_file:
     json.dump(bigdict, json_file, indent=4)
 
 print(f'All plots and input params saved to {fpath} \ngoodbye :3')
-sys.exit()
+sys.exit(0)

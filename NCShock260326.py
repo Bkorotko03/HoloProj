@@ -27,6 +27,7 @@ fnow = now.strftime('%y%m%d_%H%M%S')
 fpath = f'./NCOut_{fdate}'
 fpathn = f'./NCNormOut_{fdate}'
 os.makedirs(fpath,exist_ok=True)
+os.makedirs(fpathn,exist_ok=True)
 
 print('Entropy calculations for non-commutative shocked AdS black hole.')
 
@@ -295,16 +296,20 @@ def genAlphaPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if norm == True:
         plt.xlabel(r'$r_0/R$')
         plt.ylabel(r'$\alpha / \alpha_{max}$')
+        plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpathn}/NCNormalphavsr0.png')
+        plt.close()
     elif norm == False:
         plt.xlabel(r'$r_0/R$')
         plt.ylabel(r'$\alpha$')
+        plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpath}/NCalphavsr0.png')
+        plt.close()
     else:
         print('norm must be boolean value.')
         sys.exit(1)
-    
-    plt.semilogy()
-    plt.legend()
-    plt.show()
 
 def genShockPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
@@ -317,7 +322,7 @@ def genShockPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     
     # print(Rgrid)
     for R in Rgrid:
-        r0grid = np.logspace(np.log10(r0min),np.log10(R-eps),num)
+        r0grid = np.logspace(np.log10(eps),np.log10(R-eps),num)
         alphagrid = alpha(r0grid,R)
         areaInt = shockArea(r0grid,R)
         # print(areaInt)
@@ -336,17 +341,21 @@ def genShockPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if norm == True:
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'Area$_{A \cup B} / $Area$_{max}$')
+        plt.legend()
+        plt.semilogx()
+        plt.savefig(f'{fpathn}/NCNormshockarrvsalpha.png')
+        plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'Area$_{A \cup B}$')
         plt.semilogy()
+        plt.legend()
+        plt.semilogx()
+        plt.savefig(f'{fpath}/NCshockarrvsalpha.png')
+        plt.close()
     else:
         print('norm must be boolean value.')
         sys.exit(1)
-
-    plt.legend()
-    plt.semilogx()
-    plt.show()
 
 def genLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',rminmax=rmax):
     if Rtyp == 'lin':
@@ -368,7 +377,8 @@ def genLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',rminmax=rmax):
     # plt.xlim((1/2,10))
     plt.legend()
     plt.semilogx()
-    plt.show()
+    plt.savefig(f'{fpath}/NCLvsrmin.png')
+    plt.close()
 
 def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
     if Rtyp == 'lin':
@@ -392,7 +402,8 @@ def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
     # plt.semilogx()
     # plt.semilogy()
     plt.legend()
-    plt.show()
+    plt.savefig(f'{fpath}/NCLvsrminCut.png')
+    plt.close()
 
 def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
@@ -421,16 +432,19 @@ def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
     if norm == True:
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A} / $Area$_{max}$')
+        plt.legend()
+        plt.savefig(f'{fpathn}/NCNormunshockareavsL.png')
+        plt.close()
     elif norm == False:
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A}$')
         plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpath}/NCunshockareavsL.png')
+        plt.close()
     else:
         print('norm must be boolean value.')
         sys.exit(1)
-    
-    plt.legend()
-    plt.show()
 
 def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
     # can only give general shape of mutual information, as the "y" location is determined by the width of regions A and B
@@ -482,6 +496,9 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
         plt.ylabel(r'$\propto I(A,B) / I(A,B)_{max}$')
         plt.ylim((0,1))
         plt.xlim((0,1))
+        plt.legend()
+        plt.savefig(f'{fpathn}/NCNormmutinfvsalpha.png')
+        plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'$\propto I(A,B)$')
@@ -489,12 +506,12 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
         plt.ylim((eps,maxval))
         plt.xlim((xmin,xmax))
         plt.semilogx()
+        plt.legend()
+        plt.savefig(f'{fpath}/NCmutinfvsalpha.png')
+        plt.close()
     else:
         print('norm must be boolean value.')
         sys.exit(1)
-    
-    plt.legend()
-    plt.show()
 
 def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
@@ -556,14 +573,84 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
     if norm == True:
         plt.xlabel(r'$\alpha / \alpha_{max}$')
         plt.ylabel(r'$L_{crit} / L_{crit,max}$')
+        plt.legend()
+        plt.savefig(f'{fpathn}/NCNormLcritvsalpha.png')
+        plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
         plt.ylabel(r'$L_{crit}$')
         plt.semilogx()
         plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpath}/NCLcritvsalpha.png')
+        plt.close()
     else:
         print('norm must be boolean value.')
         sys.exit(1)
 
-    plt.legend()
-    plt.show()
+# now its time to do things fr
+
+# make default values for temps and NC param
+Rmin = 1
+Rmax = 5
+Rnum = 3
+Rlinlog = 'lin'
+
+amin = 0.1
+amax = 0.5
+anum = 3
+
+Rmin = _get_float(f"Minimum horizon radius? (press return for default value Rmin = {Rmin}): ", Rmin)
+Rmax = _get_float(f"Maximum horizon radius? (press return for default value Rmax = {Rmax}): ", Rmax)
+Rnum = _get_int(f"Numer of R values? (press return for default value Rnum = {Rnum}): ", Rnum)
+Rlinlog = _get_str(f"R value lin/log spacing? (press return for default = {Rlinlog}): ", Rlinlog)
+
+amin = _get_float(f"Minimum a value? (press return for default value amin = {amin}): ", amin)
+amax = _get_float(f"Maximum a value? (press return for default value amax = {amax}): ", amax)
+anum = _get_int(f"Numer of a values? (press return for default value anum = {anum}): ", anum)
+
+# time to run things, we'll do a for loops i guess
+# i need to implement a way to save these arrays but idc rn
+
+aArr = np.linspace(amin,amax,anum)
+
+genAlphaPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
+genAlphaPlot(Rmin,Rmax,Rnum,Rlinlog,norm=False)
+
+genShockPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
+genShockPlot(Rmin,Rmax,Rnum,Rlinlog,norm=False)
+
+for a in aArr:
+    genLvsrminPlot(Rmin,Rmax,Rnum,a,Rlinlog)
+
+    genAdjLvsrminPlot(Rmin,Rmax,Rnum,a,Rlinlog)
+
+    genUnAreaPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=True)
+    genUnAreaPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=False)
+
+    genMutInfPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=True)
+    genMutInfPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=False)
+
+    genLCritPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=True)
+    genLCritPlot(Rmin,Rmax,Rnum,a,Rlinlog,norm=False)
+
+# dict export
+bigdict = {
+    'date': date,
+    'rmax': rmax,
+    'num': num,
+    'eps': eps,
+    'Rmin': Rmin,
+    'Rmax': Rmax,
+    'Rnum': Rnum,
+    'Rlinlog': Rlinlog,
+    'amin': amin,
+    'amax': amax,
+    'anum': anum,
+}
+
+with open(f"{fpath}/{fnow}_data.json","w") as json_file:
+    json.dump(bigdict,json_file,indent=4)
+
+print(f'All plots and params saved to {fpath} and {fpathn}. \ngoodbye :3')
+sys.exit(0)
