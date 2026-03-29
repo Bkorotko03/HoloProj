@@ -92,7 +92,7 @@ rmax = 100
 num = 3000
 eps = 0.0001
 
-rmax = _get_int(f"Dimension #? (press return for default value rmax = {rmax}): ", rmax)
+rmax = _get_int(f"Maximum r value? (press return for default value rmax = {rmax}): ", rmax)
 num = _get_int(f"Array size? (press return for default value num = {num}): ", num)
 eps = _get_float(f"Epsilon value? (press return for default value epsilon = {eps}): ", eps)
 
@@ -636,7 +636,7 @@ for a in aArr:
 
 # dict export
 bigdict = {
-    'date': date,
+    'fdate': fdate,
     'rmax': rmax,
     'num': num,
     'eps': eps,

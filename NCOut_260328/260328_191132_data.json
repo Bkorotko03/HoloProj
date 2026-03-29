@@ -1,0 +1,13 @@
+{
+    "fdate": "260328",
+    "rmax": 100,
+    "num": 3000,
+    "eps": 0.0001,
+    "Rmin": 1,
+    "Rmax": 5,
+    "Rnum": 3,
+    "Rlinlog": "lin",
+    "amin": 0.1,
+    "amax": 0.5,
+    "anum": 3
+}
