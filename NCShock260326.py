@@ -1,5 +1,8 @@
 # interactive script to plot non-com shocked entropies
 
+# note that implementing something like a star map instead of these evil for loops would be much better
+# implement optional diagnostic print messages
+
 import matplotlib.pyplot as plt
 plt.rcParams['xtick.top'] = True
 plt.rcParams['ytick.right'] = True
@@ -377,7 +380,7 @@ def genLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',rminmax=rmax):
     # plt.xlim((1/2,10))
     plt.legend()
     plt.semilogx()
-    plt.savefig(f'{fpath}/NCLvsrmin_a{a*10}.png')
+    plt.savefig(f'{fpath}/NCLvsrmin_a{a:.3f}.png')
     plt.close()
 
 def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
@@ -402,7 +405,7 @@ def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
     # plt.semilogx()
     # plt.semilogy()
     plt.legend()
-    plt.savefig(f'{fpath}/NCLvsrminCut_a{a*10}.png')
+    plt.savefig(f'{fpath}/NCLvsrminCut_a{a:.3f}.png')
     plt.close()
 
 def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
@@ -433,14 +436,14 @@ def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A} / $Area$_{max}$')
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormunshockareavsL_a{a*10}.png')
+        plt.savefig(f'{fpathn}/NCNormunshockareavsL_a{a:.3f}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A}$')
         plt.semilogy()
         plt.legend()
-        plt.savefig(f'{fpath}/NCunshockareavsL_a{a*10}.png')
+        plt.savefig(f'{fpath}/NCunshockareavsL_a{a:.3f}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
@@ -484,6 +487,8 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
             normmutInf = mutInf[mask]/mutInf[mask].max()
             normalphagrid = alphagrid[mask]/alphagrid[mask].max()
             plt.plot(normalphagrid,normmutInf,label=f'R = {R:.3f}')
+            if normalphagrid.min() < xmin:
+                xmin = normalphagrid.min()
         elif norm == False:
             plt.plot(alphagrid[mask],mutInf[mask],label=f'R = {R:.3f}')
             # plt.semilogy()
@@ -494,10 +499,12 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
     if norm == True:
         plt.xlabel(r'$\alpha / \alpha_{max}$')
         plt.ylabel(r'$\propto I(A,B) / I(A,B)_{max}$')
-        plt.ylim((0,1))
-        plt.xlim((0,1))
+
+        plt.ylim((xmin,1))
+        plt.xlim((xmin,1))
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormmutinfvsalpha_a{a*10}.png')
+        plt.semilogx()
+        plt.savefig(f'{fpathn}/NCNormmutinfvsalpha_a{a:.3f}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
@@ -507,7 +514,7 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
         plt.xlim((xmin,xmax))
         plt.semilogx()
         plt.legend()
-        plt.savefig(f'{fpath}/NCmutinfvsalpha_a{a*10}.png')
+        plt.savefig(f'{fpath}/NCmutinfvsalpha_a{a:.3f}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
@@ -574,7 +581,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.xlabel(r'$\alpha / \alpha_{max}$')
         plt.ylabel(r'$L_{crit} / L_{crit,max}$')
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormLcritvsalpha_a{a*10}.png')
+        plt.savefig(f'{fpathn}/NCNormLcritvsalpha_a{a:.3f}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
@@ -582,7 +589,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.semilogx()
         plt.semilogy()
         plt.legend()
-        plt.savefig(f'{fpath}/NCLcritvsalpha_a{a*10}.png')
+        plt.savefig(f'{fpath}/NCLcritvsalpha_a{a:.3f}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
