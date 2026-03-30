@@ -377,7 +377,7 @@ def genLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',rminmax=rmax):
     # plt.xlim((1/2,10))
     plt.legend()
     plt.semilogx()
-    plt.savefig(f'{fpath}/NCLvsrmin.png')
+    plt.savefig(f'{fpath}/NCLvsrmin_a{a*10}.png')
     plt.close()
 
 def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
@@ -402,7 +402,7 @@ def genAdjLvsrminPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin'):
     # plt.semilogx()
     # plt.semilogy()
     plt.legend()
-    plt.savefig(f'{fpath}/NCLvsrminCut.png')
+    plt.savefig(f'{fpath}/NCLvsrminCut_a{a*10}.png')
     plt.close()
 
 def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
@@ -433,14 +433,14 @@ def genUnAreaPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A} / $Area$_{max}$')
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormunshockareavsL.png')
+        plt.savefig(f'{fpathn}/NCNormunshockareavsL_a{a*10}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$L$')
         plt.ylabel(r'Area$_{A}$')
         plt.semilogy()
         plt.legend()
-        plt.savefig(f'{fpath}/NCunshockareavsL.png')
+        plt.savefig(f'{fpath}/NCunshockareavsL_a{a*10}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
@@ -497,7 +497,7 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
         plt.ylim((0,1))
         plt.xlim((0,1))
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormmutinfvsalpha.png')
+        plt.savefig(f'{fpathn}/NCNormmutinfvsalpha_a{a*10}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
@@ -507,7 +507,7 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
         plt.xlim((xmin,xmax))
         plt.semilogx()
         plt.legend()
-        plt.savefig(f'{fpath}/NCmutinfvsalpha.png')
+        plt.savefig(f'{fpath}/NCmutinfvsalpha_a{a*10}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
@@ -574,7 +574,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.xlabel(r'$\alpha / \alpha_{max}$')
         plt.ylabel(r'$L_{crit} / L_{crit,max}$')
         plt.legend()
-        plt.savefig(f'{fpathn}/NCNormLcritvsalpha.png')
+        plt.savefig(f'{fpathn}/NCNormLcritvsalpha_a{a*10}.png')
         plt.close()
     elif norm == False:
         plt.xlabel(r'$\alpha$')
@@ -582,7 +582,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         plt.semilogx()
         plt.semilogy()
         plt.legend()
-        plt.savefig(f'{fpath}/NCLcritvsalpha.png')
+        plt.savefig(f'{fpath}/NCLcritvsalpha_a{a*10}.png')
         plt.close()
     else:
         print('norm must be boolean value.')
