@@ -499,7 +499,6 @@ def genMutInfPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',Lidx=(num/2),norm=False):
     if norm == True:
         plt.xlabel(r'$\alpha / \alpha_{max}$')
         plt.ylabel(r'$\propto I(A,B) / I(A,B)_{max}$')
-
         plt.ylim((xmin,1))
         plt.xlim((xmin,1))
         plt.legend()
@@ -527,7 +526,7 @@ def genLCritPlot(Rmin,Rmax,Rnum,a=0.1,Rtyp='lin',norm=False):
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     for R in Rgrid:
         r0grid = np.logspace(np.log10(eps),np.log10(R-eps),num)

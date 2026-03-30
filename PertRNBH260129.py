@@ -25,8 +25,10 @@ now = datetime.datetime.now()
 fdate = date.strftime('%y%m%d')
 fnow = now.strftime('%y%m%d_%H%M%S')
 
-fpath = f'./{fdate}_out'
+fpath = f'./comOut_{fdate}'
+fpathn = f"./comNormOut_{fdate}"
 os.makedirs(fpath,exist_ok=True)
+os.makedirs(fpathn,exist_ok=True)
 
 print('Entropy calculations for shocked Reissner-Nordstrom AdS black hole.')
 
@@ -258,28 +260,47 @@ def LCritFunc(Lgrid,alphagrid,unShockGrid,shockGrid):
 
 
 # functions to generate the actual plots
-def genAlphaPlot(Rmin,Rmax,Rnum,Rtyp='lin'):
+def genAlphaPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
         Rgrid = np.linspace(Rmin,Rmax,Rnum)
     elif Rtyp == 'log':
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     for R in Rgrid:
         r0grid = np.linspace(r0min,0.999*R,num)
         alphagrid = alpha(r0grid,R)
         mask = k3(r0grid,R) > 0
-        plt.plot(r0grid[mask],alphagrid[mask],label=f'R = {R:.3f}')
+        normr0grid = r0grid[mask]/R
 
-    plt.xlabel(r'$r_0$')
-    plt.ylabel(r'$\alpha$')
-    # plt.vlines(R,alphagrid.min(),alphagrid.max(),colors='r',label="Horizon")
-    plt.semilogy()
-    plt.legend()
-    plt.savefig(f'{fpath}/alphavsr0.png')
-    plt.close()
+        if norm == True:
+            normalphagrid = alphagrid[mask] / alphagrid[mask].max()
+            plt.plot(normr0grid,normalphagrid,label=f'R = {R:.3f}')
+        elif norm == False:
+            plt.plot(normr0grid,alphagrid[mask],label=f'R = {R:.3f}')
+        else:
+            print('norm must be boolean value')
+            sys.exit(1)
+    
+    if norm == True:
+        plt.xlabel(r'$r_0/R$')
+        plt.ylabel(r'$\alpha / \alpha_{max}$')
+        plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpathn}/alphavsr0Norm.png')
+        plt.close()
+    elif norm == False:
+        plt.xlabel(r'$r_0$')
+        plt.ylabel(r'$\alpha$')
+        plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpath}/alphavsr0.png')
+        plt.close()
+    else:
+        print('norm must be boolean value.')
+        sys.exit(1)
 
     # for plotting of k functions at different temperatures, uncomment. makes many a plot, not reccommended
     # k1grid = k1(r0grid,R)
@@ -296,29 +317,48 @@ def genAlphaPlot(Rmin,Rmax,Rnum,Rtyp='lin'):
     # plt.semilogy()
     # plt.savefig(f'{fpath}/kivsr0.png')
 
-def genShockPlot(Rmin,Rmax,Rnum,Rtyp='lin'):
+def genShockPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
         Rgrid = np.linspace(Rmin,Rmax,Rnum)
     elif Rtyp == 'log':
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     for R in Rgrid:
         r0grid = np.logspace(np.log10(r0min),np.log10(0.999*R),num)
         alphagrid = alpha(r0grid,R)
         areaInt = shockArea(r0grid,R)
         mask = areaInt > 0
-        plt.plot(alphagrid[mask],areaInt[mask],label=f'R = {R:.3f}')
-    
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel(r'Area$_{A \cup B}$')
-    plt.legend()
-    plt.semilogx()
-    plt.semilogy()
-    plt.savefig(f'{fpath}/shockarrvsalpha.png')
-    plt.close()
+
+        if norm == True:
+            normareaInt = areaInt/areaInt.max()
+            plt.plot(alphagrid[mask],normareaInt[mask],label=f'R = {R:.3f}')
+        elif norm == False:
+            plt.plot(alphagrid[mask],areaInt[mask],label=f'R = {R:.3f}')
+        else:
+            print('norm must be boolean value.')
+            sys.exit(1)
+        
+    if norm == True:
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'Area$_{A \cup B} / $Area$_{max}$')
+        plt.legend()
+        plt.semilogx()
+        plt.savefig(f'{fpathn}/shockarrvsalphaNorm.png')
+        plt.close()
+    elif norm == False:
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'Area$_{A \cup B}$')
+        plt.semilogy()
+        plt.legend()
+        plt.semilogx()
+        plt.savefig(f'{fpath}/shockarrvsalpha.png')
+        plt.close()
+    else:
+        print('norm must be boolean value.')
+        sys.exit(1)
 
 def genLvsrminPlot(Rmin,Rmax,Rnum,Rtyp='lin',rminmax=rmax):
     if Rtyp == 'lin':
@@ -343,30 +383,47 @@ def genLvsrminPlot(Rmin,Rmax,Rnum,Rtyp='lin',rminmax=rmax):
     plt.savefig(f'{fpath}/Lvsrmin.png')
     plt.close()
 
-def genUnAreaPlot(Rmin,Rmax,Rnum,Rtyp='lin'):
+def genUnAreaPlot(Rmin,Rmax,Rnum,Rtyp='lin',norm=False):
     if Rtyp == 'lin':
         Rgrid = np.linspace(Rmin,Rmax,Rnum)
     elif Rtyp == 'log':
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     for  R in Rgrid:
         rminarr = np.logspace(np.log10(R+0.1),np.log10(rmax-1),num)
         LArr = Lvsrmin(rminarr,R)
         unArea = unAreaInt(rminarr,R)
-        plt.plot(LArr,unArea,label=f'R = {R:.3f}')
-    
-    plt.xlabel(r'$L$')
-    plt.ylabel(r'Area$_{A}$')
-    plt.semilogx()
-    plt.semilogy()
-    plt.legend()
-    plt.savefig(f'{fpath}/unshockareavsL.png')
-    plt.close()
 
-def genMutInfPlot(Rmin,Rmax,Rnum,Rtyp='lin',Lidx=(num/2)):
+        if norm == True:
+            normunArea = unArea/unArea.max()
+            plt.plot(LArr,normunArea,label=f'R = {R:.3f}')
+        elif norm == False:
+            plt.plot(LArr,unArea,label=f'R = {R:.3f}')
+        else:
+            print('norm must be boolean value.')
+            sys.exit(1)
+    
+    if norm == True:
+        plt.xlabel(r'$L$')
+        plt.ylabel(r'Area$_{A} / $Area$_{max}$')
+        plt.legend()
+        plt.savefig(f'{fpathn}/unshockareavsLNorm.png')
+        plt.close()
+    elif norm == False:
+        plt.xlabel(r'$L$')
+        plt.ylabel(r'Area$_{A}$')
+        plt.semilogy()
+        plt.legend()
+        plt.savefig(f'{fpath}/unshockareavsL.png')
+        plt.close()
+    else:
+        print('norm must be boolean value.')
+        sys.exit(1)
+
+def genMutInfPlot(Rmin,Rmax,Rnum,Rtyp='lin',Lidx=(num/2),norm=False):
     # can only give general shape of mutual information, as the "y" location is determined by the width of regions A and B
     # we will just pick a random index for now as default
     if Rtyp == 'lin':
@@ -375,7 +432,7 @@ def genMutInfPlot(Rmin,Rmax,Rnum,Rtyp='lin',Lidx=(num/2)):
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     maxval = 0
     xmax = 0
@@ -391,7 +448,6 @@ def genMutInfPlot(Rmin,Rmax,Rnum,Rtyp='lin',Lidx=(num/2)):
         areaInt = shockArea(r0grid,R)
         mask = areaInt>0
         mutInf = 2*unArea[Lidx] - areaInt
-        plt.plot(alphagrid[mask],mutInf[mask],label=f'R = {R:.3f}')
         
         if mutInf[mask].max() > maxval:
             maxval = mutInf[mask].max()
@@ -399,25 +455,47 @@ def genMutInfPlot(Rmin,Rmax,Rnum,Rtyp='lin',Lidx=(num/2)):
             xmax = alphagrid[np.argmin(np.abs(mutInf))]
         if alphagrid[mask].min() < xmin:
             xmin = alphagrid[mask].min()
+        
+        if norm == True:
+            normmutInf = mutInf[mask]/mutInf[mask].max()
+            normalphagrid = alphagrid[mask]/alphagrid[mask].max()
+            plt.plot(normalphagrid,normmutInf,label=f'R = {R:.3f}')
+        elif norm == False:
+            plt.plot(alphagrid[mask],mutInf[mask],label=f'R = {R:.3f}')
+        else:
+            print('norm must be boolean value.')
+            sys.exit(1)
 
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel(r'$\propto I(A,B)$')
-    plt.ylim((0,maxval))
-    plt.xlim((xmin,xmax))
-    plt.legend()
-    plt.semilogx()
-    # plt.semilogy()
-    plt.savefig(f'{fpath}/mutinfvsalpha.png')
-    plt.close()
+    if norm == True:
+        plt.xlabel(r'$\alpha / \alpha_{max}$')
+        plt.ylabel(r'$\propto I(A,B) / I(A,B)_{max}$')
+        plt.ylim((0,1))
+        plt.xlim((xmin,1))
+        plt.legend()
+        plt.semilogx()
+        plt.savefig(f'{fpathn}/mutinfvsalphaNorm.png')
+        plt.close()
+    elif norm == False:
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'$\propto I(A,B)$')
+        plt.ylim((0,maxval))
+        plt.xlim((xmin,xmax))
+        plt.semilogx()
+        plt.legend()
+        plt.savefig(f'{fpath}/mutinfvsalpha.png')
+        plt.close()
+    else:
+        print('norm must be boolean value.')
+        sys.exit(1)
 
-def genLCritPlot(Rmin,Rmax,Rnum,Rtyp='lin',almin=1,almax=1000): #change bounds of plot here
+def genLCritPlot(Rmin,Rmax,Rnum,Rtyp='lin',almin=1,almax=1000,norm=False): #change bounds of plot here
     if Rtyp == 'lin':
         Rgrid = np.linspace(Rmin,Rmax,Rnum)
     elif Rtyp == 'log':
         Rgrid = np.logspace(np.log10(Rmin),np.log10(Rmax),Rnum)
     else:
         print('Invalid Rtyp, use lin or log')
-        return 0
+        sys.exit(1)
     
     maxval = 0
     xmax = 0
@@ -447,7 +525,6 @@ def genLCritPlot(Rmin,Rmax,Rnum,Rtyp='lin',almin=1,almax=1000): #change bounds o
         flatmask = diff > 0
         # print(flatmask)
         flatmask = np.append(flatmask,False)
-        plt.plot(alphagrid[flatmask],LCArr[flatmask],label=f'R = {R:.3f}')
 
         if LCArr[flatmask].max() > maxval:
             maxval = LCArr[flatmask].max()
@@ -455,16 +532,36 @@ def genLCritPlot(Rmin,Rmax,Rnum,Rtyp='lin',almin=1,almax=1000): #change bounds o
             xmax = alphagrid[np.argmin(np.abs(LCArr[flatmask]))]
         if alphagrid[flatmask].min() < xmin:
             xmin = alphagrid[flatmask].min()
+        
+        if norm == True:
+            normLCArr = LCArr[flatmask] / LCArr[flatmask].max()
+            normalphagrid = alphagrid[flatmask]/alphagrid[flatmask].max()
+            plt.plot(normalphagrid,normLCArr,label=f'R = {R:.3f}')
+        elif norm == False:
+            plt.plot(alphagrid[flatmask],LCArr[flatmask],label=f'R = {R:.3f}')
+        else:
+            print('norm must be boolean value.')
+            sys.exit(1)
     
-    plt.xlabel(r'$\alpha$')
-    plt.ylabel(r'$L_{crit.}$')
-    plt.legend()
-    plt.semilogx()
-    plt.ylim((0,maxval))
-    plt.xlim((xmin,xmax)) # this xmax value can sometimes get a little large to resolve fine detail at low alpha, can manually set to fix
-    # plt.semilogy()
-    plt.savefig(f'{fpath}/Lcritvsalpha.png')
-    plt.close()
+    if norm == True:
+        plt.xlabel(r'$\alpha / \alpha_{max}$')
+        plt.ylabel(r'$L_{crit} \ L_{crit,max}$')
+        plt.legend()
+        plt.savefig(f'{fpathn}/LcritvsalphaNorm.png')
+        plt.close()
+    elif norm == False:
+        plt.xlabel(r'$\alpha$')
+        plt.ylabel(r'$L_{crit.}$')
+        plt.legend()
+        plt.semilogx()
+        plt.ylim((0,maxval))
+        plt.xlim((xmin,xmax)) # this xmax value can sometimes get a little large to resolve fine detail at low alpha, can manually set to fix
+        # plt.semilogy()
+        plt.savefig(f'{fpath}/Lcritvsalpha.png')
+        plt.close()
+    else:
+        print('norm must be boolean value.')
+        sys.exit(1)
 
 # time for temp dependence
 Rmin = 2
@@ -479,11 +576,16 @@ Rlinglog = _get_str(f"R value lin/log spacing? (press return for default = {Rlin
 
 # time to make plots
 genAlphaPlot(Rmin,Rmax,Rnum,Rlinlog)
+genAlphaPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
 genShockPlot(Rmin,Rmax,Rnum,Rlinlog)
+genShockPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
 genLvsrminPlot(Rmin,Rmax,Rnum,Rlinlog,rminmax=1000) # can change plot bounds here
 genUnAreaPlot(Rmin,Rmax,Rnum,Rlinlog)
+genUnAreaPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
 genMutInfPlot(Rmin,Rmax,Rnum,Rlinlog,Lidx=10)
+genMutInfPlot(Rmin,Rmax,Rnum,Rlinlog,Lidx=10,norm=True)
 genLCritPlot(Rmin,Rmax,Rnum,Rlinlog)
+genLCritPlot(Rmin,Rmax,Rnum,Rlinlog,norm=True)
 
 # json time
 bigdict = {
@@ -503,5 +605,5 @@ bigdict = {
 with open(f"{fpath}/{fnow}_data.json", "w") as json_file:
     json.dump(bigdict, json_file, indent=4)
 
-print(f'All plots and input params saved to {fpath} \ngoodbye :3')
+print(f'All plots and input params saved to {fpath} and {fpathn}. \ngoodbye :3')
 sys.exit(0)
