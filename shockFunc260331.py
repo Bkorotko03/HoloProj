@@ -4,13 +4,13 @@ import numpy as np
 import scipy as sp
 
 # lets  set some basic params here
-rmax = 10000000
+rmax = 100000000
 num = 3000
 r0min = 0.0001
 eps = 0.0001
 
 # now lets set some physical params from the metric
-d = 5
+d = 4
 k = 0 
 l = 1
 q = 0
@@ -142,15 +142,17 @@ def Lvsrmin(rminarr,R):
 
 def unAreaInt(rminarr,R): # area for one unbroken surface
     arealist = []
-    Rgrid = np.logspace(np.log10(R),np.log10(rmax),num)
     for rmin in rminarr:
-        r = np.logspace(np.log10(rmin+eps),np.log10(rmax-eps),num)
-        integ = 2 * (r**(d-2))/np.sqrt(f(r,R)-f(r,R)*(((rmin-eps)/r)**(2*d-2)))
+        r = np.logspace(np.log10(rmin),np.log10(rmax),num)
+        Rgrid = np.logspace(np.log10(R),np.log10(rmin),num)
+        # Rgrid = np.linspace(R,rmin,num)
+        integ = 2 * (r**(d-2))/np.sqrt(f(r,R)*(1 - (((rmin-eps)/r)**(2*d-2))))
         divInteg = 2 * (r**(d-2))/np.sqrt(f(r,R))
         newint = integ - divInteg
-        area = np.trapezoid(integ,r)
+        area = np.trapezoid(newint,r)
         divArea = np.trapezoid(divInteg,Rgrid)
-        arealist.append(area-divArea)
+        divArea2 = rmin * np.sqrt((rmin**4) - (R**4))
+        arealist.append(area-divArea2)
     return np.array(arealist)
 
 

@@ -139,7 +139,7 @@ def Lvsrmin(rminarr,R,a):
     return np.array(Larr)
 
 def rMinCutoff(rminarr,LArr):
-    nCut = int(len(rminarr)*0.9) #we dont want bad solutions for the argmin way out at large r
+    nCut = int(len(rminarr)*0.2) #we dont want bad solutions for the argmin way out at large r
     LarrCut = LArr[:-nCut]
     idx = LarrCut.argmin()
     rminmax = rminarr[idx]
