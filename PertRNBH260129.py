@@ -35,7 +35,7 @@ print('Entropy calculations for shocked Reissner-Nordstrom AdS black hole.')
 # lets  set some basic params here
 rmax = 1000000000
 num = 500
-r0min = 0.001
+r0min = 0.0001
 
 # now lets set some physical params from the metric
 # these should become interactive at some point
