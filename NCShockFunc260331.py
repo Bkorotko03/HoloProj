@@ -165,7 +165,7 @@ def unAreaInt(rminarr,R,a):
         # area2 = np.trapezoid(integ2,r)
         
         # print(fullDivArea - divArea)
-        areaList.append(area1 - divArea)
+        areaList.append(area1 - fullDivArea)
         # areaList.append(area2)
     return np.array(areaList)
 
